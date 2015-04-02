@@ -14,6 +14,7 @@ public abstract class DOMElement
     protected DOMElement parentElement; // Si es null es el root
     protected ArrayList<DOMAttr> attribs;
     protected LinkedList<DOMElement> childList;
+    protected String sourceXPath;
 
     public DOMElement(String name,DOMElement parentElement)
     {
@@ -72,4 +73,43 @@ public abstract class DOMElement
         childList.add(domElement);
     }
 
+
+
+    /*
+    ToDo: use this XPath navigation advice: http://stackoverflow.com/questions/26159603/need-to-identify-xpath-for-android-element-using-appium
+
+    EditTextLinearLayout[?]/EditTextorg.itsnat.itsnatdroidtest.testact.util.CustomScrollView[?]/EditTextLinearLayout[?]/EditText'
+    TextViewLinearLayout/TextVieworg.itsnat.itsnatdroidtest.testact.util.CustomScrollView/TextViewLinearLayout/TextView
+     */
+    public String zzgetSourceXPath()
+    {
+        return "HERE_AAE: what? " + name;
+    }
+
+    public String getSourceXPath() {
+        String outResult = name + "[" + "id" + "]";
+
+        DOMElement focusedElement = parentElement;
+        int onIteration = 0;
+        while (focusedElement != null) {
+            onIteration++;
+            // ToDo: get the attribute id=?
+            outResult = focusedElement.name + "[" + "id" + "]" + "/" + outResult;
+            //outResult = focusedElement.name +  " " + onIteration + "/" + outResult;
+            focusedElement = focusedElement.parentElement;
+            if (onIteration > 15)
+            {
+                outResult = "HALT // " + outResult;
+                break;
+            }
+        }
+
+        //android.util.Log.i("INFLATEXML", "How can it be? " + outResult + " 1: " + sourceXPath);
+
+        return "HERE_AAA: " + outResult;
+    };
+
+    public void setSourcePath(String inPath) {
+        sourceXPath = inPath;
+    }
 }

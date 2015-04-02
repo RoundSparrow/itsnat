@@ -23,12 +23,17 @@ import org.itsnat.droid.impl.xmlinflater.layout.stdalone.XMLInflaterLayoutStanda
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by jmarranz on 4/11/14.
  */
 public abstract class XMLInflaterLayout extends XMLInflater
 {
+    public static Map<Integer, String> viewIdToXML = new TreeMap<Integer, String>();
+
+
     public XMLInflaterLayout(InflatedLayoutImpl inflatedXML,int bitmapDensityReference,
                              AttrLayoutInflaterListener attrLayoutInflaterListener,AttrDrawableInflaterListener attrDrawableInflaterListener,
                              Context ctx)
@@ -136,6 +141,12 @@ public abstract class XMLInflaterLayout extends XMLInflater
 
     private void fillAttributesAndAddView(View view,ClassDescViewBased classDesc,ViewGroup viewParent,DOMView domView,PendingPostInsertChildrenTasks pending)
     {
+        if (view.getId() == -1)
+        {
+            view.setId(View.generateViewId());
+            viewIdToXML.put(view.getId(), domView.getSourceXPath());
+            android.util.Log.v("INFLATEXML", "hack SPOTAA id " + view.getId() + " class: " + view.getClass().getSimpleName());
+        }
         OneTimeAttrProcess oneTimeAttrProcess = classDesc.createOneTimeAttrProcess(view,viewParent);
         fillViewAttributes(classDesc,view, domView,oneTimeAttrProcess,pending); // Los atributos los definimos después porque el addView define el LayoutParameters adecuado según el padre (LinearLayout, RelativeLayout...)
         classDesc.addViewObject(viewParent, view, -1, oneTimeAttrProcess, getInflatedLayoutImpl().getContext());
