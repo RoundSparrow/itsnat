@@ -38,7 +38,7 @@ public abstract class XMLInflaterLayout extends XMLInflater
                              AttrLayoutInflaterListener attrLayoutInflaterListener,AttrDrawableInflaterListener attrDrawableInflaterListener,
                              Context ctx)
     {
-        super(inflatedXML,bitmapDensityReference,attrLayoutInflaterListener,attrDrawableInflaterListener,ctx);
+        super(inflatedXML, bitmapDensityReference, attrLayoutInflaterListener, attrDrawableInflaterListener, ctx);
     }
 
     public static XMLInflaterLayout createXMLInflaterLayout(InflatedLayoutImpl inflatedLayout,int bitmapDensityReference,AttrLayoutInflaterListener inflateLayoutListener,AttrDrawableInflaterListener attrDrawableInflaterListener, Context ctx,PageImpl page)
@@ -100,9 +100,9 @@ public abstract class XMLInflaterLayout extends XMLInflater
 
         PendingPostInsertChildrenTasks pending = new PendingPostInsertChildrenTasks();
 
-        View rootView = createRootViewObjectAndFillAttributes(rootDOMView,pending);
+        View rootView = createRootViewObjectAndFillAttributes(rootDOMView, pending);
 
-        processChildViews(rootDOMView,rootView);
+        processChildViews(rootDOMView, rootView);
 
         pending.executeTasks();
 
@@ -147,7 +147,7 @@ public abstract class XMLInflaterLayout extends XMLInflater
             viewIdToXML.put(view.getId(), domView.getSourceXPath());
             android.util.Log.v("INFLATEXML", "hack SPOTAA id " + view.getId() + " class: " + view.getClass().getSimpleName());
         }
-        OneTimeAttrProcess oneTimeAttrProcess = classDesc.createOneTimeAttrProcess(view,viewParent);
+        OneTimeAttrProcess oneTimeAttrProcess = classDesc.createOneTimeAttrProcess(view, viewParent);
         fillViewAttributes(classDesc,view, domView,oneTimeAttrProcess,pending); // Los atributos los definimos después porque el addView define el LayoutParameters adecuado según el padre (LinearLayout, RelativeLayout...)
         classDesc.addViewObject(viewParent, view, -1, oneTimeAttrProcess, getInflatedLayoutImpl().getContext());
     }
@@ -160,6 +160,9 @@ public abstract class XMLInflaterLayout extends XMLInflater
             for (int i = 0; i < attribList.size(); i++)
             {
                 DOMAttr attr = attribList.get(i);
+                if (attr.getName().equals("id")) {
+                    android.util.Log.d("INFLATEXML", "loop " + i + " attr " + classDesc + " 1 " + attr.getName() + " 2 " + attr.getValue());
+                }
                 setAttribute(classDesc, view, attr, oneTimeAttrProcess, pending);
             }
         }
@@ -170,6 +173,9 @@ public abstract class XMLInflaterLayout extends XMLInflater
     public boolean setAttribute(ClassDescViewBased classDesc,View view,DOMAttr attr,
                                 OneTimeAttrProcess oneTimeAttrProcess,PendingPostInsertChildrenTasks pending)
     {
+        if (attr.getName().equals("id")) {
+            android.util.Log.d("INFLATEXML", "attr " + classDesc + " 1 " + attr.getName() + " 2 " + attr.getValue());
+        }
         return classDesc.setAttribute(view,attr,this,ctx,oneTimeAttrProcess,pending);
     }
 

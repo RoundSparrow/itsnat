@@ -1,5 +1,6 @@
 package org.itsnat.droid.impl.dom;
 
+import org.itsnat.droid.impl.dom.layout.DOMView;
 import org.itsnat.droid.impl.util.ValueUtil;
 
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public abstract class DOMElement
     protected ArrayList<DOMAttr> attribs;
     protected LinkedList<DOMElement> childList;
     protected String sourceXPath;
+    // if multiple children, what order are they in? used for XPath editing
+    private int sourcePathIndex = -1;
 
     public DOMElement(String name,DOMElement parentElement)
     {
@@ -62,6 +65,20 @@ public abstract class DOMElement
         return null;
     }
 
+
+    public DOMAttr findDOMAttributeAlt(String name)
+    {
+        for (int i = 0; i < attribs.size(); i++)
+        {
+            DOMAttr attr = attribs.get(i);
+            android.util.Log.d("INFLATEXML", "check " + i + " attrib " + attr.getName() + " " + attr.getValue());
+            String currName = attr.getName(); // El nombre devuelto no contiene el namespace
+            if (!name.equals(currName)) continue;
+            return attr;
+        }
+        return null;
+    }
+
     public LinkedList<DOMElement> getChildDOMElementList()
     {
         return childList;
@@ -87,14 +104,14 @@ public abstract class DOMElement
     }
 
     public String getSourceXPath() {
-        String outResult = name + "[" + "id" + "]";
+        String outResult = name + "[" + "" + sourcePathIndex + "]";
 
         DOMElement focusedElement = parentElement;
         int onIteration = 0;
         while (focusedElement != null) {
             onIteration++;
             // ToDo: get the attribute id=?
-            outResult = focusedElement.name + "[" + "id" + "]" + "/" + outResult;
+            outResult = focusedElement.name + "[" + "" + focusedElement.sourcePathIndex + "]" + "/" + outResult;
             //outResult = focusedElement.name +  " " + onIteration + "/" + outResult;
             focusedElement = focusedElement.parentElement;
             if (onIteration > 15)
@@ -104,12 +121,27 @@ public abstract class DOMElement
             }
         }
 
-        //android.util.Log.i("INFLATEXML", "How can it be? " + outResult + " 1: " + sourceXPath);
+        // DOMView asDOMview = (DOMView) this;
+        String outResult1 = " Z0: ? " + attribs.size();
+        DOMAttr aaa = findDOMAttributeAlt("id");
+        if (aaa != null) {
+            outResult1 = " Z0: " + aaa.getValue();
+            android.util.Log.i("INFLATEXML", "How can it be? " + outResult + " 1: " + outResult1 + " path " + sourceXPath);
+        }
 
-        return "HERE_AAA: " + outResult;
+        return "//" + outResult;
     };
 
     public void setSourcePath(String inPath) {
         sourceXPath = inPath;
+    }
+
+    public void setSourcePathIndex(int sourcePathIndex) {
+        this.sourcePathIndex = sourcePathIndex;
+    }
+
+    public int getSourcePathIndex()
+    {
+        return sourcePathIndex;
     }
 }

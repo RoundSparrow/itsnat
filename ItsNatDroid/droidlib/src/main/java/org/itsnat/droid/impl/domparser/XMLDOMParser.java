@@ -78,6 +78,7 @@ public abstract class XMLDOMParser
     protected DOMElement createRootElementAndFillAttributes(String name,XmlPullParser parser,XMLDOM xmlDOM)
     {
         DOMElement rootElement = createElement(name,null);
+        rootElement.setSourcePathIndex(1);
 
         setRootElement(rootElement, xmlDOM); // Cuanto antes
 
@@ -118,14 +119,20 @@ public abstract class XMLDOMParser
 
     protected void processChildElements(DOMElement parentElement,XmlPullParser parser,XMLDOM xmlDOM) throws IOException, XmlPullParserException
     {
-        DOMElement childView = parseNextChild(parentElement,parser, xmlDOM);
+        int childIndex = 1;
+        DOMElement childView = parseNextChild(parentElement,parser, xmlDOM, childIndex);
         while (childView != null)
         {
-            childView = parseNextChild(parentElement,parser, xmlDOM);
+            childIndex++;
+            childView = parseNextChild(parentElement,parser, xmlDOM, childIndex);
+            if (childView != null)
+                childView.setSourcePathIndex(childIndex);
+            else
+                android.util.Log.d("INFLATEXML", "childView null on childIndex " + childIndex);
         }
     }
 
-    private DOMElement parseNextChild(DOMElement parentElement,XmlPullParser parser,XMLDOM xmlDOM) throws IOException, XmlPullParserException
+    private DOMElement parseNextChild(DOMElement parentElement, XmlPullParser parser, XMLDOM xmlDOM, int childIndex) throws IOException, XmlPullParserException
     {
         while (parser.next() != XmlPullParser.END_TAG)
         {
@@ -134,16 +141,17 @@ public abstract class XMLDOMParser
 
             String name = parser.getName(); // viewName lo normal es que sea un nombre corto por ej RelativeLayout
 
-            DOMElement element = processElement(name, parentElement, parser, xmlDOM);
+            DOMElement element = processElement(name, parentElement, parser, xmlDOM, childIndex);
             if (element == null) continue; // Se ignora
             return element;
         }
         return null;
     }
 
-    protected DOMElement processElement(String name, DOMElement parentElement, XmlPullParser parser,XMLDOM xmlDOM) throws IOException, XmlPullParserException
+    protected DOMElement processElement(String name, DOMElement parentElement, XmlPullParser parser, XMLDOM xmlDOM, int childIndex) throws IOException, XmlPullParserException
     {
         DOMElement element = createElementAndFillAttributesAndAdd(name, parentElement, parser, xmlDOM);
+        element.setSourcePathIndex(childIndex);
         processChildElements(element,parser, xmlDOM);
         return element;
     }

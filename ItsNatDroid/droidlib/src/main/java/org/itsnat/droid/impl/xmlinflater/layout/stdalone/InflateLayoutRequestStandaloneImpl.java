@@ -119,8 +119,11 @@ public class InflateLayoutRequestStandaloneImpl extends InflateLayoutRequestImpl
         return inflateLayoutStandalone(markup);
     }
 
+    public static String latestMarkupCopy = "";
+
     private InflatedLayoutImpl inflateLayoutStandalone(String markup)
     {
+        latestMarkupCopy = markup;
         XMLInflateRegistry xmlInflateRegistry = getItsNatDroidImpl().getXMLInflateRegistry();
 
         boolean loadingPage = true;
