@@ -95,9 +95,11 @@ public class ClassDescView_view_View extends ClassDescViewBased
         addAttrDesc(new AttrDescView_view_View_padding(this,"padding"));
         addAttrDesc(new AttrDescView_view_View_padding(this,"paddingBottom"));
         // android:paddingEnd es Level 17
+        addAttrDesc(new AttrDescView_view_View_padding(this,"paddingEnd"));
         addAttrDesc(new AttrDescView_view_View_padding(this,"paddingLeft"));
         addAttrDesc(new AttrDescView_view_View_padding(this,"paddingRight"));
         // android:paddingStart es Level 17
+        addAttrDesc(new AttrDescView_view_View_padding(this,"paddingStart"));
         addAttrDesc(new AttrDescView_view_View_padding(this,"paddingTop"));
         addAttrDesc(new AttrDescView_view_View_requiresFadingEdge(this)); // requiresFadingEdge
         addAttrDesc(new AttrDescViewReflecMethodFloat(this,"rotation",0f));

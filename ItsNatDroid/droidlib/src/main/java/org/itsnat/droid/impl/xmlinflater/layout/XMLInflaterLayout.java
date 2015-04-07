@@ -202,7 +202,7 @@ public abstract class XMLInflaterLayout extends XMLInflater
                 {
                     inflateNextViewExceptionCount++;
                     e0.printStackTrace();
-                    android.util.Log.e("INFLATEXML", "Exception inflating view");
+                    android.util.Log.e("INFLATEXML", "Exception inflating view. message: " + e0.getMessage());
                 }
             }
         }

@@ -33,6 +33,8 @@ public class AttrDescView_view_View_layout_rellayout_byId extends AttrDescView
             {
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)view.getLayoutParams();
                 String value = attr.getValue();
+                // ToDo: remove. For now, o a sanity check log to see how frequently we are dispatching this runnable
+                android.util.Log.v("INFLATEXML", "Runnable run for attribute set " + value + " selector " + selector);
                 if (!value.isEmpty())
                 {
                     int viewId = getIdentifierAddIfNecessary(value,ctx);
