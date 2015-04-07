@@ -94,6 +94,13 @@ public abstract class XMLInflaterLayout extends XMLInflater
         return classDescViewMgr.get(viewName);
     }
 
+    public static int inflateNextViewExceptionCount = 0;
+
+    public static int getInflateNextViewExceptionCount()
+    {
+        return inflateNextViewExceptionCount;
+    }
+
     private View inflateRootView(XMLDOMLayout domLayout)
     {
         DOMView rootDOMView = domLayout.getRootView();
@@ -102,6 +109,7 @@ public abstract class XMLInflaterLayout extends XMLInflater
 
         View rootView = createRootViewObjectAndFillAttributes(rootDOMView, pending);
 
+        inflateNextViewExceptionCount = 0;
         processChildViews(rootDOMView, rootView);
 
         pending.executeTasks();
@@ -186,7 +194,16 @@ public abstract class XMLInflaterLayout extends XMLInflater
         {
             for (DOMElement childDOMView : childViewList)
             {
-                View childView = inflateNextView((DOMView)childDOMView, viewParent);
+                try
+                {
+                    View childView = inflateNextView((DOMView)childDOMView, viewParent);
+                }
+                catch (Exception e0)
+                {
+                    inflateNextViewExceptionCount++;
+                    e0.printStackTrace();
+                    android.util.Log.e("INFLATEXML", "Exception inflating view");
+                }
             }
         }
     }
